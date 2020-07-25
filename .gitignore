@@ -20,6 +20,7 @@ gen
 *.out
 
 .env
+.docker/
 
 node_modules
 
