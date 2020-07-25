@@ -35,13 +35,15 @@ func connectorURL(connectorConfig *entities.ConnectorConfig) string {
 	)
 }
 
-func OpenConnection() {
+func OpenConnection() error {
 	Db, err = gorm.Open("postgres", connectorURL(buildConnectorConfig()))
 
 	if err != nil {
-		fmt.Println(err)
+		return err
 	}
 
 	Db.LogMode(true)
+
+	return nil
 
 }

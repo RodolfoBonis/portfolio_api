@@ -1,7 +1,9 @@
-
 package entities
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"github.com/satori/go.uuid"
+)
 
 func UnmarshalUsers(data []byte) (Users, error) {
 	var r Users
@@ -14,7 +16,7 @@ func (r *Users) Marshal() ([]byte, error) {
 }
 
 type Users struct {
-	ID        *uuid `json:"id,omitempty"`
+	ID        *uuid.UUID   `json:"id,omitempty"`
 	Name      *string `json:"name,omitempty"`
 	Nasc      *string `json:"nasc,omitempty"`
 	Aboutme   *string `json:"aboutme,omitempty"`
