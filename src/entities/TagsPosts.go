@@ -1,6 +1,10 @@
 package entities
 
-import "encoding/json"
+import (
+	"encoding/json"
+	uuid "github.com/satori/go.uuid"
+	"time"
+)
 
 func UnmarshalTagsPosts(data []byte) (TagsPosts, error) {
 	var r TagsPosts
@@ -13,10 +17,11 @@ func (r *TagsPosts) Marshal() ([]byte, error) {
 }
 
 type TagsPosts struct {
-	ID        *string `json:"id,omitempty"`
-	PostID    *string `json:"postId,omitempty"`
-	TagID     *string `json:"tagId,omitempty"`
-	CreatedAt *string `json:"created_at,omitempty"`
-	UpdatedAt *string `json:"updated_at,omitempty"`
-	DeletedAt *string `json:"deleted_at,omitempty"`
+	ID        *uuid.UUID `json:"id,omitempty" gorm:"type:uuid;PRIMARY_KEY"`
+	PostID    *uuid.UUID `json:"post_id,omitempty" gorm:"type:uuid"`
+	TagID     *uuid.UUID `json:"tagId,omitempty" gorm:"type:uuid"`
+	Tags      *[]Tag     `json:"tags,omitempty"`
+	CreatedAt *time.Time `json:"created_at,omitempty" gorm:"type:timestamp"`
+	UpdatedAt *time.Time `json:"updated_at,omitempty" gorm:"type:timestamp"`
+	DeletedAt *time.Time `json:"deleted_at,omitempty" sql:"index"`
 }

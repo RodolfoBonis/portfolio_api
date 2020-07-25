@@ -1,24 +1,28 @@
 package entities
 
-import "encoding/json"
+import (
+	"encoding/json"
+	uuid "github.com/satori/go.uuid"
+	"time"
+)
 
-func UnmarshalSocialMedias(data []byte) (SocialMedias, error) {
-	var r SocialMedias
+func UnmarshalSocialMedia(data []byte) (SocialMedia, error) {
+	var r SocialMedia
 	err := json.Unmarshal(data, &r)
 	return r, err
 }
 
-func (r *SocialMedias) Marshal() ([]byte, error) {
+func (r *SocialMedia) Marshal() ([]byte, error) {
 	return json.Marshal(r)
 }
 
-type SocialMedias struct {
-	ID        *string `json:"id,omitempty"`
-	UserID    *string `json:"userId,omitempty"`
-	Name      *string `json:"name,omitempty"`
-	URL       *string `json:"url,omitempty"`
-	Icon      *string `json:"icon,omitempty"`
-	CreatedAt *string `json:"created_at,omitempty"`
-	UpdatedAt *string `json:"updated_at,omitempty"`
-	DeletedAt *string `json:"deleted_at,omitempty"`
+type SocialMedia struct {
+	ID        *uuid.UUID `json:"id,omitempty" gorm:"type:uuid;PRIMARY_KEY"`
+	UserID    *uuid.UUID `json:"userId,omitempty" gorm:"type:uuid"`
+	Name      *string    `json:"name,omitempty" gorm:"type:text"`
+	URL       *string    `json:"url,omitempty" gorm:"type:text"`
+	Icon      *string    `json:"icon,omitempty" gorm:"type:text"`
+	CreatedAt *time.Time `json:"created_at,omitempty" gorm:"type:timestamp"`
+	UpdatedAt *time.Time `json:"updated_at,omitempty" gorm:"type:timestamp"`
+	DeletedAt *time.Time `json:"deleted_at,omitempty" sql:"index"`
 }

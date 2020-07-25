@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:11.2
+    restart: always
+    container_name: blog-db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=my_blog
+    ports:
+      - "5432:5432"

@@ -1,23 +1,27 @@
 package entities
 
-import "encoding/json"
+import (
+	"encoding/json"
+	uuid "github.com/satori/go.uuid"
+	"time"
+)
 
-func UnmarshalComments(data []byte) (Comments, error) {
-	var r Comments
+func UnmarshalComment(data []byte) (Comment, error) {
+	var r Comment
 	err := json.Unmarshal(data, &r)
 	return r, err
 }
 
-func (r *Comments) Marshal() ([]byte, error) {
+func (r *Comment) Marshal() ([]byte, error) {
 	return json.Marshal(r)
 }
 
-type Comments struct {
-	ID        *string `json:"id,omitempty"`
-	PostID    *string `json:"postId,omitempty"`
-	Author    *string `json:"author,omitempty"`
-	Content   *string `json:"content,omitempty"`
-	CreatedAt *string `json:"created_at,omitempty"`
-	UpdatedAt *string `json:"updated_at,omitempty"`
-	DeletedAt *string `json:"deleted_at,omitempty"`
+type Comment struct {
+	ID        *uuid.UUID `json:"id,omitempty" gorm:"type:uuid;PRIMARY_KEY"`
+	PostID    *uuid.UUID    `json:"postId,omitempty" gorm:"type:uuid"`
+	Author    *string    `json:"author,omitempty"`
+	Content   *string    `json:"content,omitempty"`
+	CreatedAt *time.Time `json:"created_at,omitempty"`
+	UpdatedAt *time.Time `json:"updated_at,omitempty"`
+	DeletedAt *time.Time `json:"deleted_at,omitempty" sql:"index"`
 }

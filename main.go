@@ -15,6 +15,7 @@ func main() {
 		panic(err)
 	}
 
+	//database.RunMigration()
 	gin.ForceConsoleColor()
 	server := gin.Default()
 

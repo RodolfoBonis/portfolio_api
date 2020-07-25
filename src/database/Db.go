@@ -45,5 +45,14 @@ func OpenConnection() error {
 	Db.LogMode(true)
 
 	return nil
+}
 
+func RunMigration() {
+	Db.AutoMigrate(&entities.User{}, &entities.Post{}, &entities.Comment{}, &entities.SocialMedia{}, &entities.Tag{}, &entities.TagsPosts{})
+
+	Db.Model(&entities.Post{}).AddForeignKey("user_id", "users(id)", "RESTRICT", "RESTRICT")
+	Db.Model(&entities.SocialMedia{}).AddForeignKey("user_id", "users(id)", "RESTRICT", "RESTRICT")
+	Db.Model(&entities.Comment{}).AddForeignKey("post_id", "posts(id)", "RESTRICT", "RESTRICT")
+	Db.Model(&entities.TagsPosts{}).AddForeignKey("post_id", "posts(id)", "RESTRICT", "RESTRICT")
+	Db.Model(&entities.TagsPosts{}).AddForeignKey("tag_id", "tags(id)", "RESTRICT", "RESTRICT")
 }

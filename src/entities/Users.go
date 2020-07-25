@@ -3,24 +3,26 @@ package entities
 import (
 	"encoding/json"
 	"github.com/satori/go.uuid"
+	"time"
 )
 
-func UnmarshalUsers(data []byte) (Users, error) {
-	var r Users
+func UnmarshalUser(data []byte) (User, error) {
+	var r User
 	err := json.Unmarshal(data, &r)
 	return r, err
 }
 
-func (r *Users) Marshal() ([]byte, error) {
+func (r *User) Marshal() ([]byte, error) {
 	return json.Marshal(r)
 }
 
-type Users struct {
-	ID        *uuid.UUID   `json:"id,omitempty"`
-	Name      *string `json:"name,omitempty"`
-	Nasc      *string `json:"nasc,omitempty"`
-	Aboutme   *string `json:"aboutme,omitempty"`
-	CreatedAt *string `json:"created_at,omitempty"`
-	UpdatedAt *string `json:"updated_at,omitempty"`
-	DeletedAt *string `json:"deleted_at,omitempty"`
+type User struct {
+	ID          *uuid.UUID     `json:"id,omitempty" gorm:"type:uuid;PRIMARY_KEY"`
+	Name        *string        `json:"name,omitempty" gorm:"type:text"`
+	Nasc        *time.Time     `json:"nasc,omitempty" gorm:"type:timestamp"`
+	Aboutme     *string        `json:"aboutme,omitempty" gorm:"type:text"`
+	SocialMedia *[]SocialMedia `json:"socialmedia,omitempty"`
+	CreatedAt   *time.Time     `json:"created_at,omitempty" gorm:"type:timestamp"`
+	UpdatedAt   *time.Time     `json:"updated_at,omitempty" gorm:"type:timestamp"`
+	DeletedAt   *time.Time     `json:"deleted_at,omitempty" sql:"index"`
 }
