@@ -13,8 +13,10 @@ func UsersHandlers(r *gin.Engine) {
 	users := r.Group("/users")
 	{
 		users.GET("/", fetchUsers)
+		users.GET("/:id", fetchUserById)
 		users.POST("/", createUser)
 		users.PUT("/:id", updateUser)
+		users.DELETE("/:id", deleteUser)
 	}
 }
 
@@ -96,5 +98,31 @@ func updateUser(c *gin.Context) {
 	user.SocialMedia = listSocialmedia
 
 	c.JSON(http.StatusOK, user)
+}
 
+func fetchUserById(c *gin.Context) {
+	id, _ := c.Params.Get("id")
+	var user entities.User
+	var socialmedia []*entities.SocialMedia
+	err := database.Db.Where("id = ?", id).Select("id, name, email, created_at").Find(&user).Error
+
+	database.Db.Select("id, name, url, icon").Find(&socialmedia, "user_id = ?", user.ID)
+	user.SocialMedia = socialmedia
+
+	if err != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+		fmt.Println(err)
+	}
+
+	c.JSON(http.StatusOK, user)
+}
+
+func deleteUser(c *gin.Context) {
+	id, _ := c.Params.Get("id")
+	var user entities.User
+	var socialmedia []*entities.SocialMedia
+	database.Db.Where("id = ?", id).Delete(&user)
+	database.Db.Where("user_id = ?", id).Delete(&socialmedia)
+	data := fmt.Sprintf("id %v/", id)
+	c.JSON(200, gin.H{data: "deleted"})
 }
