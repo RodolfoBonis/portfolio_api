@@ -2,6 +2,7 @@ package entities
 
 import (
 	"encoding/json"
+	"github.com/jinzhu/gorm"
 	uuid "github.com/satori/go.uuid"
 	"time"
 )
@@ -25,4 +26,9 @@ type SocialMedia struct {
 	CreatedAt *time.Time `json:"created_at,omitempty" gorm:"type:timestamp"`
 	UpdatedAt *time.Time `json:"updated_at,omitempty" gorm:"type:timestamp"`
 	DeletedAt *time.Time `json:"deleted_at,omitempty" sql:"index"`
+}
+
+func (base *SocialMedia) BeforeCreate(scope *gorm.Scope) {
+	uuid := uuid.NewV4()
+	scope.SetColumn("ID", uuid)
 }
