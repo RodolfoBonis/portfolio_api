@@ -10,4 +10,5 @@ func Attach(router *gin.Engine) {
 	// declaração das rotas
 
 	handlers.PostsHandlers(router)
+	handlers.UsersHandlers(router)
 }
