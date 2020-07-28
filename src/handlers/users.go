@@ -7,16 +7,17 @@ import (
 	"net/http"
 	"portfolio_api/src/database"
 	"portfolio_api/src/entities"
+	"portfolio_api/src/utils"
 )
 
 func UsersHandlers(r *gin.Engine) {
 	users := r.Group("/users")
 	{
-		users.GET("/", fetchUsers)
-		users.GET("/:id", fetchUserById)
+		users.GET("/", utils.TokenAuthMiddleware(), fetchUsers)
+		users.GET("/:id", utils.TokenAuthMiddleware(), fetchUserById)
 		users.POST("/", createUser)
-		users.PUT("/:id", updateUser)
-		users.DELETE("/:id", deleteUser)
+		users.PUT("/:id", utils.TokenAuthMiddleware(), updateUser)
+		users.DELETE("/:id", utils.TokenAuthMiddleware(), deleteUser)
 	}
 }
 
@@ -115,6 +116,7 @@ func fetchUserById(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, user)
+
 }
 
 func deleteUser(c *gin.Context) {

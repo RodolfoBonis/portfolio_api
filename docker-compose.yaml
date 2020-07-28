@@ -5,8 +5,6 @@ services:
     image: postgres:11.2
     restart: always
     container_name: blog-db
-    volumes:
-      - .docker/postgres-data:/var/lib/postgresql/data
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=root

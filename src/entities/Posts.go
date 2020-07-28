@@ -2,6 +2,7 @@ package entities
 
 import (
 	"encoding/json"
+	"github.com/jinzhu/gorm"
 	uuid "github.com/satori/go.uuid"
 	"time"
 )
@@ -17,16 +18,21 @@ func (r *Post) Marshal() ([]byte, error) {
 }
 
 type Post struct {
-	ID          *uuid.UUID `json:"id,omitempty" gorm:"type:uuid;PRIMARY_KEY"`
-	UserID      *uuid.UUID `json:"userId,omitempty" gorm:"type:uuid"`
-	Title       *string    `json:"title,omitempty" gorm:"type:text"`
-	Description *string    `json:"description,omitempty" gorm:"type:text"`
-	User        *User      `json:"user,omitempty"`
-	Tags        *[]Tag     `json:"tags,omitempty"`
-	Comments    *[]Comment `json:"comments,omitempty"`
-	Like        *int       `json:"like,omitempty" gorm:"type:integer"`
-	Photos      *string    `json:"photos,omitempty" gorm:"type:text"`
-	CreatedAt   *time.Time `json:"created_at,omitempty" gorm:"type:timestamp"`
-	UpdatedAt   *time.Time `json:"updated_at,omitempty" gorm:"type:timestamp"`
-	DeletedAt   *time.Time `json:"deleted_at,omitempty" sql:"index"`
+	ID        *uuid.UUID `json:"id,omitempty" gorm:"type:uuid;PRIMARY_KEY"`
+	UserID    *uuid.UUID `json:"userId,omitempty" gorm:"type:uuid"`
+	Title     *string    `json:"title,omitempty" gorm:"type:text"`
+	Content   *string    `json:"content,omitempty" gorm:"type:text"`
+	User      *User      `json:"user,omitempty"`
+	Tags      *[]Tag     `json:"tags,omitempty"`
+	Comments  *[]Comment `json:"comments,omitempty"`
+	Like      *int       `json:"like,omitempty" gorm:"type:integer"`
+	Photos    *string    `json:"photos,omitempty" gorm:"type:text"`
+	CreatedAt *time.Time `json:"created_at,omitempty" gorm:"type:timestamp"`
+	UpdatedAt *time.Time `json:"updated_at,omitempty" gorm:"type:timestamp"`
+	DeletedAt *time.Time `json:"deleted_at,omitempty" sql:"index"`
+}
+
+func (base *Post) BeforeCreate(scope *gorm.Scope) {
+	uuid := uuid.NewV4()
+	scope.SetColumn("ID", uuid)
 }

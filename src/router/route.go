@@ -11,4 +11,5 @@ func Attach(router *gin.Engine) {
 
 	handlers.PostsHandlers(router)
 	handlers.UsersHandlers(router)
+	handlers.LoginHandlers(router)
 }
