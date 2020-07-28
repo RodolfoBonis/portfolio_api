@@ -10,6 +10,7 @@ import (
 func main() {
 
 	err := database.OpenConnection()
+	database.InitRedis()
 
 	if err != nil {
 		panic(err)
