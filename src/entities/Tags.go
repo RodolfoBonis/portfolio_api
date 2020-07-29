@@ -2,6 +2,7 @@ package entities
 
 import (
 	"encoding/json"
+	"github.com/jinzhu/gorm"
 	uuid "github.com/satori/go.uuid"
 	"time"
 )
@@ -23,3 +24,9 @@ type Tag struct {
 	UpdatedAt *time.Time `json:"updated_at,omitempty" gorm:"type:timestamp"`
 	DeletedAt *time.Time `json:"deleted_at,omitempty" sql:"index"`
 }
+
+func (base *Tag) BeforeCreate(scope *gorm.Scope) {
+	uuid := uuid.NewV4()
+	scope.SetColumn("ID", uuid)
+}
+

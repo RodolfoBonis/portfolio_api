@@ -2,6 +2,7 @@ package entities
 
 import (
 	"encoding/json"
+	"github.com/jinzhu/gorm"
 	uuid "github.com/satori/go.uuid"
 	"time"
 )
@@ -18,10 +19,15 @@ func (r *Comment) Marshal() ([]byte, error) {
 
 type Comment struct {
 	ID        *uuid.UUID `json:"id,omitempty" gorm:"type:uuid;PRIMARY_KEY"`
-	PostID    *uuid.UUID    `json:"postId,omitempty" gorm:"type:uuid"`
+	PostID    *uuid.UUID `json:"postId,omitempty" gorm:"type:uuid"`
 	Author    *string    `json:"author,omitempty"`
 	Content   *string    `json:"content,omitempty"`
 	CreatedAt *time.Time `json:"created_at,omitempty"`
 	UpdatedAt *time.Time `json:"updated_at,omitempty"`
 	DeletedAt *time.Time `json:"deleted_at,omitempty" sql:"index"`
+}
+
+func (base *Comment) BeforeCreate(scope *gorm.Scope) {
+	uuid := uuid.NewV4()
+	scope.SetColumn("ID", uuid)
 }
