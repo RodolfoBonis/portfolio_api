@@ -56,6 +56,7 @@ func login(c *gin.Context) {
 	if saveErr != nil {
 		c.JSON(http.StatusUnprocessableEntity, saveErr.Error())
 	}
+
 	tokens := map[string]string{
 		"access_token":  token.AccessToken,
 		"refresh_token": token.RefreshToken,

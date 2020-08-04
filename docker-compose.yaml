@@ -11,3 +11,10 @@ services:
       - POSTGRES_DB=my_blog
     ports:
       - "5432:5432"
+
+  redis:
+    image: redis:3.2.5-alpine
+    restart: always
+    container_name: blog-redis
+    ports:
+      - "6379:6379"
