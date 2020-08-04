@@ -20,7 +20,7 @@ func (r *TagsPosts) Marshal() ([]byte, error) {
 type TagsPosts struct {
 	ID        *uuid.UUID `json:"id,omitempty" gorm:"type:uuid;PRIMARY_KEY"`
 	PostID    *uuid.UUID `json:"post_id,omitempty" gorm:"type:uuid"`
-	TagID     *uuid.UUID `json:"tagId,omitempty" gorm:"type:uuid"`
+	TagID     *uuid.UUID `json:"tag_id,omitempty" gorm:"type:uuid"`
 	Tags      *[]Tag     `json:"tags,omitempty"`
 	CreatedAt *time.Time `json:"created_at,omitempty" gorm:"type:timestamp"`
 	UpdatedAt *time.Time `json:"updated_at,omitempty" gorm:"type:timestamp"`

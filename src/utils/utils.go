@@ -5,7 +5,6 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	uuid "github.com/satori/go.uuid"
-	"golang.org/x/crypto/bcrypt"
 	"net/http"
 	"os"
 	"portfolio_api/src/database"
@@ -14,11 +13,6 @@ import (
 	"strings"
 	"time"
 )
-
-func HashPassword(password *string) (string, error) {
-	bytes, err := bcrypt.GenerateFromPassword([]byte(*password), 14)
-	return string(bytes), err
-}
 
 func CreateToken(user entities.User) (*entities.TokenDetails, error) {
 	td := &entities.TokenDetails{}
@@ -29,8 +23,6 @@ func CreateToken(user entities.User) (*entities.TokenDetails, error) {
 	td.RefreshUuid = uuid.NewV4().String()
 
 	var err error
-	//Creating Access Token
-	os.Setenv("ACCESS_SECRET", "jdnfksdmfksd") //this should be in an env file
 	atClaims := jwt.MapClaims{}
 	atClaims["authorized"] = true
 	atClaims["access_uuid"] = td.AccessUuid

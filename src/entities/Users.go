@@ -19,8 +19,8 @@ func (base *User) Marshal() ([]byte, error) {
 }
 
 type User struct {
-	ID          *uuid.UUID     `json:"id" gorm:"type:uuid;PRIMARY_KEY"`
-	Name        *string        `json:"name" gorm:"type:text"`
+	ID          *uuid.UUID     `json:"id,omitempty" gorm:"type:uuid;PRIMARY_KEY"`
+	Name        *string        `json:"name,omitempty" gorm:"type:text"`
 	Password    *string        `json:"password,omitempty" gorm:"type:text"`
 	Email       *string        `json:"email" gorm:"type:text;UNIQUE"`
 	Nasc        *time.Time     `json:"nasc,omitempty" gorm:"type:timestamp"`
