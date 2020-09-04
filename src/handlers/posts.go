@@ -3,7 +3,6 @@ package handlers
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	uuid "github.com/satori/go.uuid"
 	"net/http"
 	"portfolio_api/src/database"
 	"portfolio_api/src/entities"
@@ -17,8 +16,29 @@ func PostsHandlers(r *gin.Engine) {
 		posts.GET("/:id", getPostById)
 		posts.POST("/", utils.TokenAuthMiddleware(), postCreate)
 		posts.PUT("/:id", utils.TokenAuthMiddleware(), postUpdate)
+		posts.PATCH("/claps/:id", clapsPost)
 		posts.DELETE("/:id", utils.TokenAuthMiddleware(), postDelete)
 	}
+}
+
+func clapsPost(c *gin.Context) {
+	id := c.Params.ByName("id")
+	var post entities.Post
+
+	if err := database.Db.Where("id = ?", id).First(&post).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"message": "Not Found"})
+		return
+	}
+
+	c.BindJSON(&post)
+
+	if err := database.Db.Save(post).Error; err != nil {
+		c.JSON(http.StatusNotModified, gin.H{"message": err})
+	}
+
+
+	c.JSON(http.StatusOK, post)
+
 }
 
 func postDelete(c *gin.Context) {
@@ -65,9 +85,7 @@ func getPostById(c *gin.Context) {
 
 func postUpdate(c *gin.Context) {
 	var post entities.Post
-	var tagPost entities.TagsPosts
-	var tagsIds []uuid.UUID
-	var count entities.Count
+
 	id := c.Params.ByName("id")
 
 	if err := database.Db.Where("id = ?", id).First(&post).Error; err != nil {
@@ -77,32 +95,10 @@ func postUpdate(c *gin.Context) {
 
 	c.BindJSON(&post)
 
-	if err := database.Db.Save(post).Error; err != nil {
+	if err := database.Db.Update("like", post.Like).Error; err != nil {
 		c.JSON(http.StatusNotModified, gin.H{"message": err})
+		return
 	}
-
-	for _, tag := range *post.Tags {
-		tagPost.TagID = tag.ID
-		tagsIds = append(tagsIds, *tag.ID)
-		uuid, _ := uuid.FromString(id)
-		tagPost.PostID = &uuid
-
-		database.Db.Raw("SELECT COUNT(*) FROM tags_posts WHERE post_id = ? AND tag_id = ?", id, tagPost.TagID).Scan(&count)
-
-		if count.Count == 0 {
-			database.Db.Create(&tagPost)
-		} else {
-			database.Db.Exec(
-				"UPDATE tags_posts SET deleted_at = null "+
-					"WHERE deleted_at IS NOT NULL AND "+
-					"tag_id = ? AND post_id = ?", tagPost.TagID, id)
-		}
-	}
-
-	database.Db.Exec(
-		"UPDATE tags_posts SET deleted_at = now() "+
-			"WHERE deleted_at IS NULL AND "+
-			"tag_id NOT IN (?) AND post_id = ?", tagsIds, id)
 
 	c.JSON(http.StatusOK, post)
 }

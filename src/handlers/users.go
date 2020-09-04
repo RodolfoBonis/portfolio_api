@@ -13,11 +13,11 @@ import (
 func UsersHandlers(r *gin.Engine) {
 	users := r.Group("/users", utils.TokenAuthMiddleware())
 	{
-		users.GET("/", fetchUsers)
+		users.GET("/", utils.TokenAuthMiddleware(), fetchUsers)
 		users.GET("/:id", fetchUserById)
-		users.POST("/",  createUser)
+		users.POST("/", utils.TokenAuthMiddleware(), createUser)
 		users.PUT("/:id", updateUser)
-		users.DELETE("/:id", deleteUser)
+		users.DELETE("/:id", utils.TokenAuthMiddleware(), deleteUser)
 	}
 }
 
