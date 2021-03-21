@@ -12,6 +12,17 @@ services:
     ports:
       - "5432:5432"
 
+  keycloak:
+    image: quay.io/keycloak/keycloak
+    restart: always
+    container_name: blog-auth
+    entrypoint: ./.docker/auth/entrypoint.sh
+    environment:
+      - KEYCLOAK_USER=admin
+      - KEYCLOAK_PASSWORD=admin
+    ports:
+      - "8080:8080"
+
   redis:
     image: redis:3.2.5-alpine
     restart: always
